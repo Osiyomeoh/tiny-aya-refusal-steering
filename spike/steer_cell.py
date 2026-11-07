@@ -46,7 +46,8 @@ else:
     direction, layer, _ = S.extract_refusal_direction(model, tok, harmful, harmless,
                                                       S.RefusalDirectionConfig(select_directions=False))
     torch.save({"direction": direction.cpu(), "layer": layer}, DIRECTION)
-steered = S.RefusalDirectionModel(model, direction=direction, mode="steer", strength=0.25, layers=None)
+STRENGTHS = {"4bit_steer": 0.25, **{f"4bit_steer_{a}": a for a in []}}  # 0.25 is the fixed config; extras are exploratory only.
+steerers = {b: S.RefusalDirectionModel(model, direction=direction, mode="steer", strength=a, layers=None) for b, a in STRENGTHS.items()}
 print("calibrated in", round(time.time() - t0), "s | direction from layer", layer)
 
 def answer(prompt):
@@ -64,19 +65,19 @@ if os.path.exists(OUT):
         done = {(r["build"], r["pair_id"], r["kind"]) for r in map(json.loads, f)}
 print("resuming with", len(done), "rows already saved")
 with open(OUT, "a") as f:
-    for build in ("4bit_base", "4bit_steer"):
+    for build in ("4bit_base", *STRENGTHS):
         for i, pair in enumerate(PAIRS):
             for kind, prompt in zip(("unsafe", "legit"), pair):
                 if (build, str(i), kind) in done:
                     continue
-                if build == "4bit_steer":
-                    with steered:
+                if build in steerers:
+                    with steerers[build]:
                         text, n, s = answer(prompt)
                 else:
                     text, n, s = answer(prompt)
                 f.write(json.dumps({"build": build, "pair_id": str(i), "kind": kind, "prompt": prompt,
                                     "response": text, "new_tokens": n, "seconds": s,
-                                    "safetune": safetune.__version__, "alpha": 0.25}) + "\n")
+                                    "safetune": safetune.__version__, "alpha": STRENGTHS.get(build), "max_new_tokens": 200}) + "\n")
                 f.flush(); os.fsync(f.fileno())
             print(build, i + 1, "/", len(PAIRS))
 from google.colab import files

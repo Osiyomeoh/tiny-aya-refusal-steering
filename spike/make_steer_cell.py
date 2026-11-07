@@ -1,4 +1,4 @@
-"""Write steer_cell.py: one self-contained Colab cell for the steering kill test (see STEER-RULE.md)."""
+"""Write steer_cell.py (spike, 200 tokens) or final_cell.py (512 tokens, optional exploratory strengths): one self-contained Colab cell for the steering kill test (see STEER-RULE.md)."""
 import json
 
 from make_notebook import PAIRS
@@ -15,10 +15,10 @@ assert torch.cuda.is_available(), "Switch the runtime to GPU first."
 from google.colab import drive, userdata
 try:
     drive.mount("/content/drive")  # Optional: lets a rerun resume after a disconnect.
-    SAVE = "/content/drive/MyDrive/lexis_steer"
+    SAVE = "/content/drive/MyDrive/__DIR__"
 except Exception as e:
     print("Drive not mounted (", e, ") - saving on this machine instead")
-    SAVE = "/content/lexis_steer"
+    SAVE = "/content/__DIR__"
 os.makedirs(SAVE, exist_ok=True)
 OUT = SAVE + "/steer_outputs.jsonl"
 DIRECTION = SAVE + "/direction.pt"
@@ -51,7 +51,8 @@ else:
     direction, layer, _ = S.extract_refusal_direction(model, tok, harmful, harmless,
                                                       S.RefusalDirectionConfig(select_directions=False))
     torch.save({"direction": direction.cpu(), "layer": layer}, DIRECTION)
-steered = S.RefusalDirectionModel(model, direction=direction, mode="steer", strength=0.25, layers=None)
+STRENGTHS = {"4bit_steer": 0.25, **{f"4bit_steer_{a}": a for a in __EXTRA__}}  # 0.25 is the fixed config; extras are exploratory only.
+steerers = {b: S.RefusalDirectionModel(model, direction=direction, mode="steer", strength=a, layers=None) for b, a in STRENGTHS.items()}
 print("calibrated in", round(time.time() - t0), "s | direction from layer", layer)
 
 def answer(prompt):
@@ -59,7 +60,7 @@ def answer(prompt):
                                   return_tensors="pt", return_dict=True).to(model.device)
     t = time.time()
     with torch.inference_mode():
-        gen = model.generate(**ids, max_new_tokens=200, do_sample=False)
+        gen = model.generate(**ids, max_new_tokens=__MAXNEW__, do_sample=False)
     new = gen[0][ids["input_ids"].shape[1]:]
     return tok.decode(new, skip_special_tokens=True), len(new), round(time.time() - t, 2)
 
@@ -69,19 +70,19 @@ if os.path.exists(OUT):
         done = {(r["build"], r["pair_id"], r["kind"]) for r in map(json.loads, f)}
 print("resuming with", len(done), "rows already saved")
 with open(OUT, "a") as f:
-    for build in ("4bit_base", "4bit_steer"):
+    for build in ("4bit_base", *STRENGTHS):
         for i, pair in enumerate(PAIRS):
             for kind, prompt in zip(("unsafe", "legit"), pair):
                 if (build, str(i), kind) in done:
                     continue
-                if build == "4bit_steer":
-                    with steered:
+                if build in steerers:
+                    with steerers[build]:
                         text, n, s = answer(prompt)
                 else:
                     text, n, s = answer(prompt)
                 f.write(json.dumps({"build": build, "pair_id": str(i), "kind": kind, "prompt": prompt,
                                     "response": text, "new_tokens": n, "seconds": s,
-                                    "safetune": safetune.__version__, "alpha": 0.25}) + "\\n")
+                                    "safetune": safetune.__version__, "alpha": STRENGTHS.get(build), "max_new_tokens": __MAXNEW__}) + "\\n")
                 f.flush(); os.fsync(f.fileno())
             print(build, i + 1, "/", len(PAIRS))
 from google.colab import files
@@ -89,9 +90,16 @@ files.download(OUT)
 '''
 
 
+def build(out, save_dir, max_new, extra):
+    cell = (CELL.replace("__PAIRS__", json.dumps(PAIRS)).replace("__DIR__", save_dir)
+            .replace("__MAXNEW__", str(max_new)).replace("__EXTRA__", json.dumps(extra)))
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(cell)
+
+
 def main():
-    with open("steer_cell.py", "w", encoding="utf-8") as f:
-        f.write(CELL.replace("__PAIRS__", json.dumps(PAIRS)))
+    build("steer_cell.py", "lexis_steer", 200, [])
+    build("final_cell.py", "lexis_final", 512, [0.5])
 
 
 if __name__ == "__main__":
