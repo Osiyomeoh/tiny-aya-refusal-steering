@@ -22,3 +22,10 @@ Not claimed: multilingual effect, generalisation beyond electrical safety, robus
 | 11 | F1–F2 disagree on 3/180 rows (15, 58, 131) | label CSVs | run |
 | 12 | 23/180 answers hit the 512 cap (spike: 108/120 hit 200) | final_outputs.jsonl | run |
 | 13 | AuditKIT 1.1.6 red-team, each probe with its mapped detectors: base and steered 0.25 identical on every probe/detector (injection 5/8, jailbreak 8/8, encoding 4/5, over-refusal 5/5); outputs differ on 39/47 checks, no pass/fail flipped. Keyword/regex detectors, 5–8 prompts per probe | spike/auditkit_redteam.jsonl | run; null result |
+
+## Cost (spike/roi.py, prices checked 2026-11-08)
+| # | Claim | Evidence | Status |
+|---|---|---|---|
+| 14 | At batch size 1 on a T4, steered 0.25: 31.71 s and 357.8 output tokens per answer, 11.28 tokens/s; base 29.10 s, 387.1 tokens, 13.30 tokens/s; steering costs 15% of throughput | final_outputs.jsonl (`seconds`, `new_tokens`), roi.py | run |
+| 15 | Steered answer on a $0.50/h T4 endpoint costs $0.00440 (GPU time only); Claude Haiku 5.5 $0.00018, Sonnet 5.5 $0.00363, Opus 5.5 $0.00725 | roi.py; huggingface.co/docs/inference-endpoints/pricing; platform.claude.com/docs/en/about-claude/pricing | run + source; prompt tokens (24) estimated from word counts; Tiny Aya token counts used for every row |
+| 16 | At an assumed 22,000 questions a month, an always-on T4 ($365) breaks even with Opus 5.5 at about 50,000 answers a month, within one T4's capacity of about 83,000 | roi.py | the volume is an assumption; batched serving not measured |
