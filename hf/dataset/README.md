@@ -2,7 +2,7 @@
 pretty_name: Tiny Aya refusal steering, electrical site safety
 language:
 - en
-license: "[FILL: check the output terms of the CohereLabs/tiny-aya-global licence]"
+license: cc-by-nc-4.0
 task_categories:
 - text-generation
 tags:
@@ -48,6 +48,9 @@ The model is loaded at revision `af89d219b53ed9b13b8a4645f9c8028973510324` in NF
 
 ## Labelling
 The answers were shuffled with seed 20261108 and their build names hidden. Two fresh model labellers then labelled them against a written rubric (`spike/RUBRIC.md` in the code repo). They disagree on 3 of 180 rows.
+
+## Licence
+CC-BY-NC-4.0, matching [the source model](https://huggingface.co/CohereLabs/tiny-aya-global), whose licence carries Cohere Labs' [acceptable use policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy). The model card does not address outputs separately, so we apply the same terms.
 
 ## Limits and intended use
 - One domain (electrical site safety), English only.
