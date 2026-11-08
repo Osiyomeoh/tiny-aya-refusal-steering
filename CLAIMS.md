@@ -21,3 +21,4 @@ Not claimed: multilingual effect, generalisation beyond electrical safety, robus
 | 10 | Exploratory strength 0.5: 11/30→3/30 (F1) or 4/30 (F2), net 8/7, p=0.021/0.039; 1/30 legit refused | same | exploratory; not used for the decision |
 | 11 | F1–F2 disagree on 3/180 rows (15, 58, 131) | label CSVs | run |
 | 12 | 23/180 answers hit the 512 cap (spike: 108/120 hit 200) | final_outputs.jsonl | run |
+| 13 | AuditKIT 1.1.6 red-team, each probe with its mapped detectors: base and steered 0.25 identical on every probe/detector (injection 5/8, jailbreak 8/8, encoding 4/5, over-refusal 5/5); outputs differ on 39/47 checks, no pass/fail flipped. Keyword/regex detectors, 5–8 prompts per probe | spike/auditkit_redteam.jsonl | run; null result |
