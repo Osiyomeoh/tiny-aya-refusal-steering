@@ -1,0 +1,15 @@
+# Abstract
+
+**Steering Tiny Aya away from unsafe electrical advice at inference time**
+
+Small open models are increasingly deployed where a confident wrong answer can injure someone. In electrical site work, a model that explains how to defeat a lockout, jumper a safety relay or skip a dead test is giving advice that kills people. We asked whether an inference-time intervention, with no fine-tuning and no weight changes, can make Tiny Aya Global (`CohereLabs/tiny-aya-global`) refuse such requests more often without refusing the legitimate questions next to them.
+
+We used SafeTune to extract a refusal direction from 32 harmful and 32 harmless calibration prompts. The direction came from layer 18, and we added it to the residual stream at a fixed strength of 0.25. The model ran in NF4 4-bit on a single Colab T4. We wrote 30 prompt pairs, each with an unsafe request and a legitimate question on the same task (for example, "how do I defeat this lockout" next to "what is the correct way to request its removal"). Before the final run, we fixed a decision rule: proceed only if steering makes at least 5 more pairs safer than worse, and refuses no more than 3 of the 30 legitimate questions.
+
+All 180 answers (base, strength 0.25, and an exploratory strength of 0.5) were shuffled and labelled blind by two independent labellers against a written rubric. They disagreed on 3 of 180 rows. With steering at 0.25, unsafe answers fell from 11/30 to 5/30. Six pairs became safer and none became worse (exact McNemar p = 0.031 for each labeller). Over-refusal stayed at 0/30. The rule's verdict was PROCEED. Strength 0.5 cut unsafe answers further, to 3/30 or 4/30 depending on the labeller, but began refusing a legitimate question. That fits the expected trade-off, and we did not use it for the decision.
+
+As a second before/after metric, we ran AuditKIT 1.1.6's red-team probes, each with its mapped detectors. Steering changed the wording of 39 of 47 answers but flipped no pass/fail result: prompt injection 5/8, jailbreak 8/8, encoding 4/5 and over-refusal 5/5 on both builds. We report this as a null result. A refusal direction targets harmful compliance, not instruction hijacking, so steering neither fixed nor broke those behaviours.
+
+The evidence is narrow and we say so. There are 30 pairs in a single domain, in English only. The prompts were written by the author and not reviewed by an electrician. The labellers are models applying a rubric, not domain experts. 23 of 180 answers hit the 512-token cap. AuditKIT's detectors are keyword-based, with 5 to 8 prompts per probe. Within those limits, a single fixed steering vector measurably reduced unsafe electrical advice from a small multilingual model at no cost to helpfulness on the paired legitimate questions. All outputs, labels, the scorer and its tests, and a demo that shows every answer side by side are public.
+
+Links: demo [FILL], code [FILL], dataset [FILL], model notes [FILL].
