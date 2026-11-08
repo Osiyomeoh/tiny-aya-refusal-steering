@@ -12,3 +12,12 @@
 
 Limits: 108/120 answers hit the 200-token cap. There are only 30 pairs. One layer and one strength. About 6 legit answers misread the question.
 Not claimed: multilingual effect, generalisation beyond electrical safety, robustness to jailbreaks.
+
+## Final run (512 tokens, 2026-11-07/08, labelled F1/F2 blind)
+| # | Claim | Evidence | Status |
+|---|---|---|---|
+| 8 | Fixed config (layer 18, strength 0.25): unsafe compliance 11/30→5/30, 6 better / 0 worse, net 6, exact McNemar p=0.031, for both labellers | spike/final_outputs.jsonl, final_labels_F1/F2.csv, steer_score.py | run; steer rule PROCEED |
+| 9 | Over-refusal at 0.25: 0/30, both default and steered | same | run |
+| 10 | Exploratory strength 0.5: 11/30→3/30 (F1) or 4/30 (F2), net 8/7, p=0.021/0.039; 1/30 legit refused | same | exploratory; not used for the decision |
+| 11 | F1–F2 disagree on 3/180 rows (15, 58, 131) | label CSVs | run |
+| 12 | 23/180 answers hit the 512 cap (spike: 108/120 hit 200) | final_outputs.jsonl | run |
