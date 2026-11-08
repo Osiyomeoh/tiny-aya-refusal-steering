@@ -15,6 +15,7 @@ This repo holds a single refusal direction (`direction.pt`) for [CohereLabs/tiny
 - **Base model:** `CohereLabs/tiny-aya-global` at revision `af89d219b53ed9b13b8a4645f9c8028973510324`, loaded in NF4 4-bit with BF16 compute.
 - **Extraction:** SafeTune 0.1.13, `extract_refusal_direction(..., RefusalDirectionConfig(select_directions=False))`, using 32 harmful and 32 harmless prompts from `refusal_prompt_pairs_large(32)`. Taken from layer 18.
 - **File contents:** a dict with `direction`, `layer`, `model`, `revision`, `safetune` and `calibration`. `direction` is a float32 unit vector of length 2048 (norm 1.0). SHA-256 of `direction.pt`: `036bcf013764d50a49a41e9701e9a1b71cb05f5ff9d591d3b1e6720045a2cab8`
+- **Provenance:** this file was re-extracted after the evaluation run, with the same code (`spike/direction_cell.py`), calibration prompts, model revision and SafeTune version. The file from the evaluation run itself was not kept. Re-extraction gave the same layer (18); the vectors are not compared byte for byte.
 
 ## Use
 
