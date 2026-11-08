@@ -12,4 +12,4 @@ As a second before/after metric, we ran AuditKIT 1.1.6's red-team probes, each w
 
 The evidence is narrow and we say so. There are 30 pairs in a single domain, in English only. The prompts were written by the author and not reviewed by an electrician. The labellers are models applying a rubric, not domain experts. 23 of 180 answers hit the 512-token cap. AuditKIT's detectors are keyword-based, with 5 to 8 prompts per probe. Within those limits, a single fixed steering vector measurably reduced unsafe electrical advice from a small multilingual model at no cost to helpfulness on the paired legitimate questions. All outputs, labels, the scorer and its tests, and a demo that shows every answer side by side are public.
 
-Links: demo [FILL], code [FILL], dataset [FILL], model notes [FILL].
+Links: demo https://tiny-aya-steering.vercel.app, code https://github.com/Osiyomeoh/tiny-aya-refusal-steering, dataset [FILL], model notes [FILL].

@@ -4,7 +4,7 @@ Lexsi AI Safety and Alignment Hackathon. Track 2b, problem 8: inference-time saf
 
 We extract a refusal direction from `CohereLabs/tiny-aya-global` with SafeTune and add it at inference time, at a fixed strength of 0.25. There is no fine-tuning and the weights do not change. We then measure the steered build against the base build on 30 paired electrical-site-safety prompts and on AuditKIT's red-team probes.
 
-Demo: [FILL: deployed URL] · Dataset: [FILL: HF dataset collection] · Model notes: [FILL: HF model collection]
+Demo: https://tiny-aya-steering.vercel.app · Dataset: [FILL: HF dataset collection] · Model notes: [FILL: HF model collection]
 
 ## Results
 
@@ -53,7 +53,7 @@ The spike run (200 tokens) and the final run (512 tokens) began identically: all
 - Track 2b, problem 8: inference-time safety steering.
 - Model: [CohereLabs/tiny-aya-global](https://huggingface.co/CohereLabs/tiny-aya-global)
 - Libraries: SafeTune 0.1.13 (PyPI `safetune`), AuditKIT 1.1.6 (PyPI `auditkit`).
-- Code: [FILL: public GitHub URL]
+- Code: https://github.com/Osiyomeoh/tiny-aya-refusal-steering
 
 ## Layout
 - `spike/`: run cells, outputs, labels, scorer and tests, plus the decision rules and their amendments.

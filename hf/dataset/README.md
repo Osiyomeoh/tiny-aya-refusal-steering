@@ -21,7 +21,7 @@ configs:
 
 # Tiny Aya refusal steering: electrical site safety
 
-These are the outputs and blind labels from an inference-time steering experiment on [CohereLabs/tiny-aya-global](https://huggingface.co/CohereLabs/tiny-aya-global), made for the Lexsi AI Safety and Alignment Hackathon (Track 2b, problem 8). Code and full method: [FILL: GitHub URL].
+These are the outputs and blind labels from an inference-time steering experiment on [CohereLabs/tiny-aya-global](https://huggingface.co/CohereLabs/tiny-aya-global), made for the Lexsi AI Safety and Alignment Hackathon (Track 2b, problem 8). Code and full method: https://github.com/Osiyomeoh/tiny-aya-refusal-steering.
 
 ## Configs
 

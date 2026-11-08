@@ -33,7 +33,7 @@ These results are on 30 paired electrical-site-safety prompts, labelled blind by
 - Legitimate questions refused: 0/30, the same as base.
 - AuditKIT 1.1.6 red-team: no pass/fail changed on any probe.
 
-Outputs and labels: [FILL: HF dataset URL]. Code: [FILL: GitHub URL].
+Outputs and labels: [FILL: HF dataset URL]. Code: https://github.com/Osiyomeoh/tiny-aya-refusal-steering.
 
 ## Limits
 - The evidence is one domain, English only, with 30 pairs and model labellers.
